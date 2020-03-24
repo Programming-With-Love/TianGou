@@ -1,0 +1,99 @@
+<html>
+<head>
+    <title> 舔狗日记</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="http://danbai.oss-cn-chengdu.aliyuncs.com/img/2020/03/24/3b27bee1f387f.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body onselectstart="return false" oncontextmenu="self.event.returnValue=false" class="">
+<div id="wrapper">
+    <header id="header">
+        <div class="logo">
+            <span>舔狗日记</span></div>
+        <div class="content">
+            <div class="inner">
+                <h2 id="date"></h2>
+                <h3 id="sentence">我爸说再敢网恋就打断我的腿，幸好不是胳膊，这样我还能继续和你打字聊天，就算连胳膊也打断了，我的心里也会有你位置。</h3>
+            </div>
+        </div>
+        <div>
+            <button onclick="Again()">还要看</button>
+            <button onclick="Write()">我要写</button>
+        </div>
+    </header>
+    <footer id="footer">
+        <p class="copyright">开源地址:<a target="_black" href="https://github.com/Programming-With-Love/TianGou">为爱发电</a>
+        </p>
+    </footer>
+</div>
+<div id="xie">
+    <h2 style="color: lightcyan">舔狗日记</h2>
+    <p class="lb">日期:<input type="text" id="dateinput"></p>
+    <p class="lb">内容:<textarea cols="40" rows="5" id="contentinput"></textarea></p>
+    <button style="float: left" onclick="back()">返回</button>
+    <button style="float: right" onclick="post()">提交</button>
+</div>
+<div id="bg"></div>
+<script src="js/jquery.min.js"></script>
+</body>
+<script>
+    $(function () {
+        $("#xie").hide();
+        Again();
+    })
+
+    function Again() {
+        $.ajax({
+            method: "GET", // 一般用 POST 或 GET 方法
+            url: "/diary", // 要请求的地址
+            dataType: "json",
+            success(r) {
+                $("#date").html(r.Data.time);
+                $("#sentence").html(r.Data.content);
+            }
+        });
+    }
+
+    function Write() {
+        $("#wrapper").hide();
+        $("#xie").show();
+    }
+    function back() {
+        $("#wrapper").show();
+        $("#xie").hide();
+    }
+    function post() {
+        time=$("#dateinput").val();
+        content=$("#contentinput").val();
+        if(time.length<4|content.length<10){
+            alert("字数过少");
+            return
+        }
+        $.ajax({
+            method: "POST", // 一般用 POST 或 GET 方法
+            url: "/diary", // 要请求的地址
+            dataType: "json",
+            data:{time:time,content:content},
+            success(r) {
+                if(r.Code==0){
+                    alert("提交成功");
+                    $("#dateinput").val("");
+                    $("#contentinput").val("");
+                    back();
+                }else {
+                    if(r.Code==101){
+                        alert(r.Msg);
+                    }else {
+                        alert("提交错误");
+                    }
+                }
+            }
+        });
+
+    }
+</script>
+
+</html>
