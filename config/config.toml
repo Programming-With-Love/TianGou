@@ -19,7 +19,7 @@
 
 # Database.
 [database]
-    link  = "mysql:TianGou:TianGou225@tcp(185.207.153.189:3306)/TianGou"
+    link  = "mysql:TianGou:123123@tcp(127.0.0.1:3306)/TianGou"
     debug = true
     # Database logger.
     [database.logger]
