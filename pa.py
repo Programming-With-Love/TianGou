@@ -5,6 +5,7 @@ import re
 from DBUtils.PooledDB import PooledDB
 from multiprocessing.pool import ThreadPool
 
+tgi=0
 proxys=[]
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'}
 #获取代理
@@ -53,11 +54,17 @@ def main():
 	print("结束")
 def run(url):
 	#获取页面数据
-	r=getHtml(url,False)
+	r=getHtml(url,True)
 	data2 = json.loads(r)
-	for i in range(0,len(data2['data']['cards'])):
-		url = 'http://tiangou.p00q.cn/diary'
-		d = {'time': '来自微博的日记', 'content':data2['data']['cards'][i]['mblog']["text"]}
-		r = requests.post(url, data=d)
+	global tgi
+	try:
+		for i in range(0,len(data2['data']['cards'])):
+			url = 'http://tiangou.p00q.cn/diary'
+			d = {'time': '来自微博的日记', 'content':data2['data']['cards'][i]['mblog']["text"]}
+			r = requests.post(url, data=d)
+			tgi+=1
+			print(str(tgi)+"--"+data2['data']['cards'][i]['mblog']["text"])
+	except Exception as e:
+		print(e)
 if __name__ == "__main__":
 	main()
